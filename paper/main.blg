@@ -1,0 +1,49 @@
+This is BibTeX, Version 0.99d (TeX Live 2024)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: main.aux
+The style file: plain.bst
+Database file #1: references.bib
+Warning--empty booktitle in saito2015precision
+Warning--can't use both volume and number fields in saito2015precision
+You've used 8 entries,
+            2118 wiz_defined-function locations,
+            536 strings with 5972 characters,
+and the built_in function-call counts, 3680 in all, are:
+= -- 304
+> -- 319
+< -- 2
++ -- 127
+- -- 118
+* -- 298
+:= -- 645
+add.period$ -- 24
+call.type$ -- 8
+change.case$ -- 80
+chr.to.int$ -- 0
+cite$ -- 10
+duplicate$ -- 117
+empty$ -- 206
+format.name$ -- 118
+if$ -- 722
+int.to.chr$ -- 0
+int.to.str$ -- 8
+missing$ -- 8
+newline$ -- 43
+num.names$ -- 16
+pop$ -- 97
+preamble$ -- 1
+purify$ -- 72
+quote$ -- 0
+skip$ -- 85
+stack$ -- 0
+substring$ -- 73
+swap$ -- 31
+text.length$ -- 2
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 32
+warning$ -- 2
+while$ -- 19
+width$ -- 9
+write$ -- 84
+(There were 2 warnings)

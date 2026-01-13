@@ -1,0 +1,49 @@
+{
+  "baseline": {
+    "auroc": 0.8017,
+    "auprc": 0.7386568068779713,
+    "method": "PCIB Theory-Guided"
+  },
+  "random_forest_enhanced": {
+    "auroc": 0.8402000000000002,
+    "auprc": 0.850614070513851,
+    "method": "RF Enhanced",
+    "improvement": 0.0385000000000002
+  },
+  "gradient_boosting_enhanced": {
+    "auroc": 0.8482999999999999,
+    "auprc": 0.8424166964992814,
+    "method": "GB Enhanced",
+    "improvement": 0.046599999999999975
+  },
+  "neural_network": {
+    "auroc": 0.8201,
+    "auprc": 0.8003079390694281,
+    "method": "Neural Network",
+    "improvement": 0.018400000000000083
+  },
+  "svm_rbf_enhanced": {
+    "auroc": 0.84375,
+    "auprc": 0.851433049860587,
+    "method": "SVM-RBF Enhanced",
+    "improvement": 0.04205000000000003
+  },
+  "optimized_ensemble": {
+    "auroc": 0.8543000000000001,
+    "auprc": 0.8558188321149641,
+    "method": "Optimized Weighted Ensemble",
+    "improvement": 0.05260000000000009,
+    "weights": {
+      "rf": 0.3,
+      "gb": 0.4,
+      "mlp": 0.2,
+      "svm": 0.10000000000000009
+    }
+  },
+  "simple_average_ensemble": {
+    "auroc": 0.8521,
+    "auprc": 0.8523393061390924,
+    "method": "Simple Average Ensemble",
+    "improvement": 0.0504
+  }
+}

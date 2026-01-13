@@ -1,0 +1,213 @@
+% TikZ-based figures for stacking results (no external PDFs)
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.85\textwidth,
+    height=7.5cm,
+    xbar,
+    xlabel={\sffamily\normalsize\bfseries AUROC},
+    ylabel style={font=\sffamily\small},
+    xmin=0.78, xmax=0.87,
+    ytick=data,
+    yticklabels={
+        {Opt. Weighted Ensemble},
+        {Simple Avg. Ensemble},
+        {GB Enhanced},
+        {SVM-RBF Enhanced},
+        {RF Enhanced},
+        {Neural Network},
+        {PCIB Baseline}
+    },
+    nodes near coords,
+    nodes near coords align={horizontal},
+    every node near coord/.append style={font=\sffamily\scriptsize, xshift=8pt},
+    grid=major,
+    grid style={line width=0.5pt, draw=gray!20},
+    font=\sffamily,
+    title={\sffamily\normalsize\bfseries Performance Comparison: PCIB Signal Stacking},
+    title style={yshift=2pt},
+    xlabel style={yshift=2pt},
+    legend style={
+        at={(0.97,0.03)},
+        anchor=south east,
+        legend columns=1,
+        font=\sffamily\scriptsize,
+        fill=white,
+        draw=gray!30,
+        rounded corners=2pt,
+        inner sep=3pt
+    },
+    axis line style={line width=1pt, draw=black!20},
+    every axis plot/.append style={fill opacity=0.85, draw=black, line width=0.5pt},
+    enlarge y limits={abs=0.6}
+]
+
+% Data points
+\addplot[fill=figmagreen] coordinates {(0.8543, 0)};
+\addplot[fill=figmagreen] coordinates {(0.8521, 1)};
+\addplot[fill=figmablue] coordinates {(0.8483, 2)};
+\addplot[fill=figmablue] coordinates {(0.8438, 3)};
+\addplot[fill=figmablue] coordinates {(0.8402, 4)};
+\addplot[fill=figmapurple] coordinates {(0.8201, 5)};
+\addplot[fill=gray!60] coordinates {(0.8017, 6)};
+
+% Reference lines only - no text annotations to avoid clutter
+\addplot[dashed, line width=1.5pt, red!50, forget plot] coordinates {(0.85, -0.8) (0.85, 6.8)};
+\addplot[dashed, line width=1.2pt, orange!50, forget plot] coordinates {(0.80, -0.8) (0.80, 6.8)};
+
+\legend{Ensemble, Tree-Based, Neural, Baseline}
+
+\end{axis}
+\end{tikzpicture}
+\caption{\textbf{AUROC Performance Comparison.} Supervised learning on PCIB signals achieves 0.85+ AUROC (red dashed line), with optimized weighted ensemble reaching 0.8543. All stacking methods substantially outperform the theory-guided baseline at 0.8017 (orange dashed line), demonstrating that neuroscience-inspired signals provide powerful features for machine learning.}
+\label{fig:stacking_auroc}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.85\textwidth,
+    height=6.5cm,
+    ybar,
+    bar width=14pt,
+    ylabel={\sffamily\small\bfseries Improvement (pp)},
+    xlabel={\sffamily\small\bfseries Method},
+    ymin=0, ymax=6,
+    xtick=data,
+    xticklabels={
+        {Opt.\\Ensemble},
+        {Simple\\Ensemble},
+        {GB\\Enhanced},
+        {SVM-RBF\\Enhanced},
+        {RF\\Enhanced},
+        {Neural\\Net}
+    },
+    x tick label style={font=\sffamily\tiny, rotate=25, anchor=east},
+    nodes near coords,
+    nodes near coords style={font=\sffamily\tiny, yshift=3pt},
+    grid=major,
+    grid style={line width=0.5pt, draw=gray!20},
+    font=\sffamily,
+    title={\sffamily\large\bfseries Improvement Over PCIB Baseline},
+    title style={yshift=3pt},
+    ylabel style={yshift=-3pt},
+    legend style={
+        at={(0.5,-0.28)},
+        anchor=north,
+        legend columns=2,
+        font=\sffamily\tiny,
+        fill=figmagray,
+        draw=none,
+        rounded corners=3pt
+    },
+    axis line style={line width=1pt, draw=black!20},
+    enlarge x limits=0.12
+]
+
+% AUROC improvements (in percentage points)
+\addplot[fill=figmablue, draw=black, line width=0.5pt] coordinates {
+    (0, 5.26)  % Optimized Ensemble: 0.8543 - 0.8017 = 0.0526 * 100
+    (1, 5.04)  % Simple Ensemble
+    (2, 4.66)  % GB
+    (3, 4.21)  % SVM
+    (4, 3.85)  % RF
+    (5, 1.84)  % Neural Net
+};
+
+% AUPRC improvements (in percentage points)
+\addplot[fill=figmared, draw=black, line width=0.5pt] coordinates {
+    (0, 11.71)  % Optimized Ensemble: 0.8558 - 0.7387 = 0.1171 * 100
+    (1, 11.36)  % Simple Ensemble
+    (2, 10.37)  % GB
+    (3, 11.27)  % SVM
+    (4, 11.19)  % RF
+    (5, 6.16)   % Neural Net
+};
+
+\legend{AUROC Improvement (pp), AUPRC Improvement (pp)}
+
+\end{axis}
+\end{tikzpicture}
+\caption{\textbf{Performance Gains Over Baseline.} All supervised learning methods show substantial improvements over the theory-guided PCIB baseline. AUROC gains range from +1.84 to +5.26 percentage points, while AUPRC gains are even larger (+6.16 to +11.71 pp), demonstrating that PCIB signals capture learnable patterns. Ensemble methods achieve the largest gains, validating the benefit of combining diverse model types.}
+\label{fig:stacking_improvements}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.75\textwidth,
+    height=6.5cm,
+    xlabel={\sffamily\small\bfseries AUROC},
+    ylabel={\sffamily\small\bfseries AUPRC},
+    xmin=0.79, xmax=0.87,
+    ymin=0.72, ymax=0.87,
+    grid=major,
+    grid style={line width=0.5pt, draw=gray!20},
+    font=\sffamily,
+    legend pos=south east,
+    legend style={
+        font=\sffamily\tiny,
+        fill=figmagray,
+        draw=none,
+        rounded corners=3pt,
+        inner sep=4pt
+    },
+    title={\sffamily\large\bfseries AUROC vs AUPRC: Method Comparison},
+    title style={yshift=3pt},
+    xlabel style={yshift=3pt},
+    ylabel style={yshift=-3pt},
+    axis line style={line width=1pt, draw=black!20}
+]
+
+% Plot points for each method
+\addplot[only marks, mark=*, mark size=6pt, color=figmagreen, fill=figmagreen] coordinates {
+    (0.8543, 0.8558)  % Optimized Ensemble
+};
+\addlegendentry{Optimized Ensemble}
+
+\addplot[only marks, mark=square*, mark size=5pt, color=figmagreen!70, fill=figmagreen!70] coordinates {
+    (0.8521, 0.8523)  % Simple Ensemble
+};
+\addlegendentry{Simple Ensemble}
+
+\addplot[only marks, mark=triangle*, mark size=6pt, color=figmablue, fill=figmablue] coordinates {
+    (0.8483, 0.8424)  % GB
+};
+\addlegendentry{Gradient Boosting}
+
+\addplot[only marks, mark=diamond*, mark size=6pt, color=figmablue!70, fill=figmablue!70] coordinates {
+    (0.8438, 0.8514)  % SVM
+};
+\addlegendentry{SVM-RBF}
+
+\addplot[only marks, mark=pentagon*, mark size=6pt, color=figmapurple, fill=figmapurple] coordinates {
+    (0.8402, 0.8506)  % RF
+};
+\addlegendentry{Random Forest}
+
+\addplot[only marks, mark=otimes*, mark size=6pt, color=figmapurple!70, fill=figmapurple!70] coordinates {
+    (0.8201, 0.8003)  % Neural Net
+};
+\addlegendentry{Neural Network}
+
+\addplot[only marks, mark=x, mark size=8pt, line width=2pt, color=gray!70] coordinates {
+    (0.8017, 0.7387)  % Baseline
+};
+\addlegendentry{PCIB Baseline}
+
+% Target lines
+\addplot[dashed, line width=2pt, red!50, domain=0.79:0.87] {x};
+\addlegendentry{AUROC = AUPRC}
+
+\end{axis}
+\end{tikzpicture}
+\caption{\textbf{AUROC-AUPRC Trade-off Analysis.} Scatter plot showing the relationship between AUROC and AUPRC for all methods. Points above the diagonal (red dashed line) indicate methods where AUPRC exceeds AUROC. Most stacking methods achieve balanced performance across both metrics, with ensemble methods (green) showing the best overall results. The baseline (gray X) demonstrates the performance improvement enabled by supervised learning.}
+\label{fig:stacking_scatter}
+\end{figure}
+
+% Add ROC and PR curves for all methods
+\input{stacking_roc_pr_curves}

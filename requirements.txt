@@ -1,0 +1,13 @@
+# PC+IB Hallucination Detector Dependencies
+
+# OpenAI API (requires AsyncOpenAI + Responses API support)
+openai>=1.50.0
+
+# HuggingFace datasets (for PatronusAI/HaluBench)
+datasets>=2.14.0
+
+# Numerical operations
+numpy>=1.24.0
+
+# Progress bars with async support
+tqdm>=4.65.0

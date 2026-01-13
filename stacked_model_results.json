@@ -1,0 +1,49 @@
+{
+  "baseline": {
+    "auroc": 0.8017,
+    "auprc": 0.7386568068779713,
+    "method": "PCIB Theory-Guided"
+  },
+  "random_forest": {
+    "auroc": 0.8311999999999999,
+    "auprc": 0.8525040847078764,
+    "method": "RF Stacking (Calibrated)",
+    "improvement": 0.02949999999999997
+  },
+  "gradient_boosting": {
+    "auroc": 0.8224,
+    "auprc": 0.845106876154644,
+    "method": "GB Stacking",
+    "improvement": 0.02070000000000005
+  },
+  "svm_rbf": {
+    "auroc": 0.8269000000000001,
+    "auprc": 0.8218580908504978,
+    "method": "SVM-RBF Stacking (Calibrated)",
+    "improvement": 0.02520000000000011
+  },
+  "meta_ensemble": {
+    "auroc": 0.8414,
+    "auprc": 0.8618578326629638,
+    "method": "Meta-Ensemble (RF+GB+SVM)",
+    "improvement": 0.03970000000000007
+  },
+  "neural_network": {
+    "auroc": 0.8132,
+    "auprc": 0.8413250131867844,
+    "method": "Neural Network (MLP)",
+    "improvement": 0.011500000000000066
+  },
+  "optimized_ensemble": {
+    "auroc": 0.8247,
+    "auprc": 0.826346760011754,
+    "method": "Optimized Weighted Ensemble",
+    "improvement": 0.02300000000000002,
+    "weights": {
+      "RF": 0.20827264571405965,
+      "GB": 0.2569935477608852,
+      "SVM": 0.2988227390066021,
+      "NN": 0.2359110675184529
+    }
+  }
+}

@@ -1,0 +1,72 @@
+\section{Supervised Learning on PCIB Signals}
+\label{sec:stacking}
+
+While the theory-guided PCIB framework provides interpretable hallucination signals, 
+we can further improve performance by treating these signals as features in supervised 
+machine learning models. This hybrid approach combines the theoretical foundations of PCIB 
+with the empirical optimization of data-driven methods.
+
+\subsection{Feature Engineering}
+We extract and engineer features from PCIB signals:
+
+\begin{itemize}
+  \item \textbf{Base Signals}: Uptake KL-divergence, Stress JS-divergence, Conflict JS-divergence, and composite score
+  \item \textbf{Aggregations}: Mean, maximum, minimum, and standard deviation across all claims
+  \item \textbf{Interactions}: Pairwise and three-way interactions between signals (e.g., $\text{uptake} \times \text{stress}$)
+  \item \textbf{Ratios}: Relative signal strengths (e.g., $\text{uptake}/\text{stress}$)
+  \item \textbf{Polynomials}: Squared terms to capture non-linear relationships
+  \item \textbf{Composite Features}: Products of composite score with individual signals
+\end{itemize}
+
+This feature engineering process expands the 11 base PCIB features to over 30 engineered features, 
+capturing complex non-linear relationships and interactions between signals.
+
+\subsection{Model Architecture}
+We train multiple supervised learning models on the engineered PCIB features:
+
+\begin{itemize}
+  \item \textbf{Random Forest}: Ensemble of 500 decision trees with balanced class weights
+  \item \textbf{Gradient Boosting}: Sequential tree-based learner with learning rate 0.01
+  \item \textbf{Neural Network}: Multi-layer perceptron with hidden layers [100, 50]
+  \item \textbf{Support Vector Machine}: RBF kernel with isotonic calibration
+\end{itemize}
+
+All models use 5-fold stratified cross-validation for hyperparameter tuning and evaluation. 
+We optimize for AUROC during grid search and apply isotonic calibration where appropriate.
+
+\subsection{Ensemble Methods}
+We explore two ensemble strategies:
+
+\begin{enumerate}
+  \item \textbf{Simple Average}: Arithmetic mean of all model predictions
+  \item \textbf{Optimized Weighted}: Grid search over weight combinations to maximize AUROC
+\end{enumerate}
+
+The optimized weighted ensemble searches through weight combinations and selects 
+the configuration that maximizes validation AUROC, balancing the strengths of different model types.
+
+\subsection{Results}
+Table~\ref{tab:stacking_performance} presents the performance of each approach. 
+The baseline PCIB composite score achieves AUROC = 0.8017, while 
+the best stacking method (Optimized Weighted Ensemble) achieves AUROC = 0.8543, 
+a relative improvement of 6.56\%. 
+
+Figure~\ref{fig:stacking_comparison} visualizes the performance gains across different methods. 
+All supervised learning approaches outperform the baseline, with ensemble methods achieving 
+the strongest performance. This demonstrates that while PCIB signals are theoretically motivated 
+and interpretable, data-driven optimization can further enhance their effectiveness.
+
+\subsection{Analysis}
+The success of stacking approaches reveals several insights:
+
+\begin{itemize}
+  \item \textbf{Non-linear Patterns}: Gradient Boosting and Neural Networks capture non-linear relationships between PCIB signals
+  \item \textbf{Feature Importance}: Tree-based models reveal that composite score and uptake KL-divergence are most predictive
+  \item \textbf{Ensemble Benefits}: Combining diverse models (tree-based, kernel-based, neural) captures complementary patterns
+  \item \textbf{Calibration Matters}: Isotonic calibration improves probability estimates, especially for Random Forest and SVM
+\end{itemize}
+
+Importantly, this approach maintains the interpretability of PCIB signals while achieving 
+competitive performance with state-of-the-art hallucination detection systems. The learned 
+feature weights can be analyzed to understand which signal combinations are most indicative 
+of hallucinations in different contexts.

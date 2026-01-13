@@ -1,0 +1,66 @@
+{
+  "summary": [
+    {
+      "method": "PCIB (Theory-Guided)",
+      "auroc": 0.8017,
+      "auprc": 0.7386568068779713,
+      "f1": 0.77720207253886,
+      "accuracy": 0.785,
+      "auroc_gain": 0.30169999999999997,
+      "auprc_gain": 0.2386568068779713
+    },
+    {
+      "method": "Random Forest",
+      "auroc": 0.7680499999999999,
+      "auprc": 0.7880559249444052,
+      "f1": 0.7450980392156863,
+      "accuracy": 0.74,
+      "auroc_gain": 0.2680499999999999,
+      "auprc_gain": 0.28805592494440524
+    },
+    {
+      "method": "Gradient Boosting",
+      "auroc": 0.76215,
+      "auprc": 0.7551378321116605,
+      "f1": 0.7027027027027027,
+      "accuracy": 0.725,
+      "auroc_gain": 0.26215,
+      "auprc_gain": 0.2551378321116605
+    },
+    {
+      "method": "SVM (RBF)",
+      "auroc": 0.71735,
+      "auprc": 0.6874539433981398,
+      "f1": 0.6477272727272728,
+      "accuracy": 0.69,
+      "auroc_gain": 0.21735000000000004,
+      "auprc_gain": 0.1874539433981398
+    },
+    {
+      "method": "Logistic Regression",
+      "auroc": 0.71495,
+      "auprc": 0.6628085056071698,
+      "f1": 0.6555555555555554,
+      "accuracy": 0.69,
+      "auroc_gain": 0.21494999999999997,
+      "auprc_gain": 0.16280850560716975
+    },
+    {
+      "method": "Simple Average",
+      "auroc": 0.27290000000000003,
+      "auprc": 0.38485183340632384,
+      "f1": 0.673469387755102,
+      "accuracy": 0.52,
+      "auroc_gain": -0.22709999999999997,
+      "auprc_gain": -0.11514816659367616
+    }
+  ],
+  "insights": {
+    "pcib_rank_auroc": 1,
+    "pcib_rank_auprc": 3,
+    "best_method": "PCIB (Theory-Guided)",
+    "best_auroc": 0.8017,
+    "pcib_auroc": 0.8017,
+    "avg_ml_auroc": 0.740625
+  }
+}

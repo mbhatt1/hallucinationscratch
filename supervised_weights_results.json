@@ -1,0 +1,23 @@
+{
+  "current": {
+    "auroc": 0.8017,
+    "auprc": 0.7386568068779713
+  },
+  "supervised": {
+    "auroc": 0.71495,
+    "auprc": 0.6628085056071698,
+    "cv_auroc_mean": 0.72675,
+    "cv_auroc_std": 0.08870456583513615,
+    "weights": {
+      "uptake": 1.4408522045028334,
+      "stress": -0.29363544782719747,
+      "conflict": -2.12647819148956
+    },
+    "intercept": -0.8028229497098384
+  },
+  "improvement": {
+    "auroc_delta": -0.08675,
+    "auprc_delta": -0.07584830127080155,
+    "auroc_improvement_pct": -28.753728869738147
+  }
+}

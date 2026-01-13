@@ -1,0 +1,22 @@
+{
+  "baseline": {
+    "auroc": 0.8017,
+    "auprc": 0.7386568068779713
+  },
+  "random_forest": {
+    "auroc": 0.84655,
+    "auprc": 0.8518888852912458
+  },
+  "gradient_boosting": {
+    "auroc": 0.82755,
+    "auprc": 0.8499702261785915
+  },
+  "svm_rbf": {
+    "auroc": 0.84635,
+    "auprc": 0.8462489972491609
+  },
+  "meta_ensemble": {
+    "auroc": 0.8508500000000001,
+    "auprc": 0.8686435139302046
+  }
+}

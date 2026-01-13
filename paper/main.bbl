@@ -1,0 +1,55 @@
+\begin{thebibliography}{1}
+
+\bibitem{gao2023rarr}
+Luyu Gao, Zhuyun Dai, Panupong Pasupat, Anthony Chen, Arun~Tejasvi Chaganty,
+  Yicheng Fan, Vincent~Y Zhao, Ni~Lao, Hongrae Lee, Da-Cheng Juan, et~al.
+\newblock Rarr: Researching and revising what language models say, using
+  language models.
+\newblock In {\em Proceedings of ACL}, 2023.
+
+\bibitem{honovich2021qags}
+Or~Honovich, Roee Aharoni, Jonathan Herzig, Hagai Taitelbaum, Doron Kukliansy,
+  Vered Cohen, Avinatan Hassidim, and Yossi Matias.
+\newblock Q2: Evaluating factual consistency in knowledge-grounded dialogues
+  via question generation and question answering.
+\newblock In {\em Proceedings of EMNLP}, 2021.
+
+\bibitem{ji2023survey}
+Ziwei Ji, Nayeon Lee, Rita Frieske, Tiezheng Yu, Dan Su, Yan Xu, Etsuko Ishii,
+  Ye~Jin Bang, Andrea Madotto, and Pascale Fung.
+\newblock Survey of hallucination in natural language generation.
+\newblock {\em ACM Computing Surveys}, 55(12):1--38, 2023.
+
+\bibitem{kadavath2022language}
+Saurav Kadavath, Tom Conerly, Amanda Askell, Tom Henighan, Dawn Drain, Ethan
+  Perez, Nicholas Schiefer, Zac Hatfield-Dodds, Nova DasSarma, Eli
+  Tran-Johnson, et~al.
+\newblock Language models (mostly) know what they know.
+\newblock {\em arXiv preprint arXiv:2207.05221}, 2022.
+
+\bibitem{kuhn2023semantic}
+Lorenz Kuhn, Yarin Gal, and Sebastian Farquhar.
+\newblock Semantic uncertainty: Linguistic invariances for uncertainty
+  estimation in natural language generation.
+\newblock In {\em Proceedings of ICLR}, 2023.
+
+\bibitem{manakul2023selfcheckgpt}
+Potsawee Manakul, Adian Liusie, and Mark~JF Gales.
+\newblock Selfcheckgpt: Zero-resource black-box hallucination detection for
+  generative large language models.
+\newblock In {\em Proceedings of EMNLP}, 2023.
+
+\bibitem{saito2015precision}
+Takaya Saito and Marc Rehmsmeier.
+\newblock The precision-recall plot is more informative than the roc plot when
+  evaluating binary classifiers on imbalanced datasets.
+\newblock volume~10, page e0118432, 2015.
+
+\bibitem{zhang2023siren}
+Yue Zhang, Yafu Li, Leyang Cui, Deng Cai, Lemao Liu, Tingchen Fu, Xinting
+  Huang, Enbo Zhao, Yu~Zhang, Yulong Chen, et~al.
+\newblock Siren's song in the ai ocean: A survey on hallucination in large
+  language models.
+\newblock {\em arXiv preprint arXiv:2309.01219}, 2023.
+
+\end{thebibliography}

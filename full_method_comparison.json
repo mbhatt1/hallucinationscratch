@@ -1,0 +1,152 @@
+{
+  "all_results": [
+    {
+      "method": "PCIB (Theory-Guided)",
+      "type": "UNSUPERVISED",
+      "auroc": 0.8017,
+      "auprc": 0.7386568068779713,
+      "f1": 0.77720207253886,
+      "accuracy": 0.785,
+      "auroc_gain": 0.30169999999999997,
+      "auprc_gain": 0.2386568068779713
+    },
+    {
+      "method": "Simple Average (Inverted Uptake)",
+      "type": "UNSUPERVISED",
+      "auroc": 0.27290000000000003,
+      "auprc": 0.38485183340632384,
+      "f1": 0.673469387755102,
+      "accuracy": 0.52,
+      "auroc_gain": -0.22709999999999997,
+      "auprc_gain": -0.11514816659367616
+    },
+    {
+      "method": "Arithmetic Mean",
+      "type": "UNSUPERVISED",
+      "auroc": 0.4821,
+      "auprc": 0.49178007301071003,
+      "f1": 0.6558704453441295,
+      "accuracy": 0.575,
+      "auroc_gain": -0.017900000000000027,
+      "auprc_gain": -0.008219926989289972
+    },
+    {
+      "method": "Variance-Weighted",
+      "type": "UNSUPERVISED",
+      "auroc": 0.26839999999999997,
+      "auprc": 0.3939972792119601,
+      "f1": 0.6689189189189189,
+      "accuracy": 0.51,
+      "auroc_gain": -0.23160000000000003,
+      "auprc_gain": -0.1060027207880399
+    },
+    {
+      "method": "Max Signal",
+      "type": "UNSUPERVISED",
+      "auroc": 0.2768,
+      "auprc": 0.4007308533318719,
+      "f1": 0.6756756756756758,
+      "accuracy": 0.52,
+      "auroc_gain": -0.2232,
+      "auprc_gain": -0.09926914666812808
+    },
+    {
+      "method": "Product of Signals",
+      "type": "UNSUPERVISED",
+      "auroc": 0.27399999999999997,
+      "auprc": 0.38938887745262063,
+      "f1": 0.6757679180887373,
+      "accuracy": 0.525,
+      "auroc_gain": -0.22600000000000003,
+      "auprc_gain": -0.11061112254737937
+    },
+    {
+      "method": "Geometric Mean",
+      "type": "UNSUPERVISED",
+      "auroc": 0.2739,
+      "auprc": 0.3884414974133669,
+      "f1": 0.673469387755102,
+      "accuracy": 0.52,
+      "auroc_gain": -0.22610000000000002,
+      "auprc_gain": -0.11155850258663308
+    },
+    {
+      "method": "Harmonic Mean",
+      "type": "UNSUPERVISED",
+      "auroc": 0.277,
+      "auprc": 0.3911000362298225,
+      "f1": 0.6757679180887373,
+      "accuracy": 0.525,
+      "auroc_gain": -0.22299999999999998,
+      "auprc_gain": -0.10889996377017752
+    },
+    {
+      "method": "PCA (1st Component)",
+      "type": "UNSUPERVISED",
+      "auroc": 0.2876,
+      "auprc": 0.38381969084867307,
+      "f1": 0.673469387755102,
+      "accuracy": 0.52,
+      "auroc_gain": -0.21239999999999998,
+      "auprc_gain": -0.11618030915132693
+    },
+    {
+      "method": "L2 Norm",
+      "type": "UNSUPERVISED",
+      "auroc": 0.2691,
+      "auprc": 0.38376514606849677,
+      "f1": 0.6711409395973155,
+      "accuracy": 0.51,
+      "auroc_gain": -0.2309,
+      "auprc_gain": -0.11623485393150323
+    },
+    {
+      "method": "Logistic Regression",
+      "type": "SUPERVISED",
+      "auroc": 0.71495,
+      "auprc": 0.6628085056071698,
+      "f1": 0.6555555555555554,
+      "accuracy": 0.69,
+      "auroc_gain": 0.21494999999999997,
+      "auprc_gain": 0.16280850560716975
+    },
+    {
+      "method": "Random Forest",
+      "type": "SUPERVISED",
+      "auroc": 0.7680499999999999,
+      "auprc": 0.7880559249444052,
+      "f1": 0.7450980392156863,
+      "accuracy": 0.74,
+      "auroc_gain": 0.2680499999999999,
+      "auprc_gain": 0.28805592494440524
+    },
+    {
+      "method": "Gradient Boosting",
+      "type": "SUPERVISED",
+      "auroc": 0.76215,
+      "auprc": 0.7551378321116605,
+      "f1": 0.7027027027027027,
+      "accuracy": 0.725,
+      "auroc_gain": 0.26215,
+      "auprc_gain": 0.2551378321116605
+    },
+    {
+      "method": "SVM (RBF)",
+      "type": "SUPERVISED",
+      "auroc": 0.71735,
+      "auprc": 0.6874539433981398,
+      "f1": 0.6477272727272728,
+      "accuracy": 0.69,
+      "auroc_gain": 0.21735000000000004,
+      "auprc_gain": 0.1874539433981398
+    }
+  ],
+  "summary": {
+    "pcib_rank": 1,
+    "pcib_auroc": 0.8017,
+    "unsupervised_avg_auroc": 0.2979777777777778,
+    "supervised_avg_auroc": 0.740625,
+    "best_unsupervised": "Arithmetic Mean",
+    "best_supervised": "Random Forest"
+  }
+}

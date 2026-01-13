@@ -1,0 +1,72 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pcib-detector"
+version = "0.1.0"
+description = "Predictive-Coding + Information-Bottleneck hallucination detector"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "Your Name", email = "your.email@example.com"}
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    "numpy>=1.24.0",
+    "tqdm>=4.65.0",
+]
+
+[project.optional-dependencies]
+openai = [
+    "openai>=1.50.0",
+]
+anthropic = [
+    "anthropic>=0.18.0",
+]
+gemini = [
+    "google-generativeai>=0.3.0",
+]
+all-providers = [
+    "openai>=1.50.0",
+    "anthropic>=0.18.0",
+    "google-generativeai>=0.3.0",
+]
+dev = [
+    "pytest>=7.0.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+]
+mcp = [
+    "mcp>=0.1.0",
+]
+eval = [
+    "datasets>=2.14.0",
+]
+
+[project.scripts]
+pcib = "pcib_detector.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/yourusername/pcib-detector"
+Repository = "https://github.com/yourusername/pcib-detector"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+line-length = 120
+target-version = ["py310", "py311", "py312"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
