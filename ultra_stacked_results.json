@@ -1,0 +1,93 @@
+{
+  "baseline": {
+    "auroc": 0.8017,
+    "auprc": 0.7386568068779713,
+    "method": "PCIB Theory-Guided Baseline"
+  },
+  "base_rf_shallow": {
+    "auroc": 0.8387,
+    "cv_mean": 0.8490000000000002,
+    "cv_std": 0.05339943819929197,
+    "method": "rf_shallow"
+  },
+  "base_rf_deep": {
+    "auroc": 0.8236,
+    "cv_mean": 0.8240000000000001,
+    "cv_std": 0.0607525719620166,
+    "method": "rf_deep"
+  },
+  "base_extra_trees": {
+    "auroc": 0.8244,
+    "cv_mean": 0.8264999999999999,
+    "cv_std": 0.04928488612140635,
+    "method": "extra_trees"
+  },
+  "base_gb_fast": {
+    "auroc": 0.8098000000000001,
+    "cv_mean": 0.8089999999999999,
+    "cv_std": 0.04905609034564417,
+    "method": "gb_fast"
+  },
+  "base_gb_slow": {
+    "auroc": 0.8094,
+    "cv_mean": 0.8130000000000001,
+    "cv_std": 0.04570010940905945,
+    "method": "gb_slow"
+  },
+  "base_svm_rbf": {
+    "auroc": 0.8067500000000001,
+    "cv_mean": 0.81125,
+    "cv_std": 0.05476084367502021,
+    "method": "svm_rbf"
+  },
+  "base_svm_poly": {
+    "auroc": 0.80375,
+    "cv_mean": 0.8237500000000001,
+    "cv_std": 0.03091318488929927,
+    "method": "svm_poly"
+  },
+  "base_mlp_small": {
+    "auroc": 0.7242,
+    "cv_mean": 0.7145,
+    "cv_std": 0.0950578771065292,
+    "method": "mlp_small"
+  },
+  "base_mlp_large": {
+    "auroc": 0.7874000000000001,
+    "cv_mean": 0.798,
+    "cv_std": 0.041635321543132105,
+    "method": "mlp_large"
+  },
+  "base_ridge": {
+    "auroc": 0.699,
+    "cv_mean": 0.8539999999999999,
+    "cv_std": 0.04841487374764085,
+    "method": "ridge"
+  },
+  "base_naive_bayes": {
+    "auroc": 0.57565,
+    "cv_mean": 0.45775,
+    "cv_std": 0.10344805459746449,
+    "method": "naive_bayes"
+  },
+  "simple_average": {
+    "auroc": 0.8309000000000001,
+    "auprc": 0.846709031869775,
+    "method": "Simple Average (All Models)"
+  },
+  "logistic_meta": {
+    "auroc": 0.8305999999999999,
+    "auprc": 0.8502612759608061,
+    "method": "Logistic Regression Meta-Learner"
+  },
+  "rf_meta": {
+    "auroc": 0.8173999999999999,
+    "auprc": 0.8361787448730247,
+    "method": "Random Forest Meta-Learner"
+  },
+  "weighted_average": {
+    "auroc": 0.8343,
+    "auprc": 0.851552635849955,
+    "method": "Performance-Weighted Average"
+  }
+}

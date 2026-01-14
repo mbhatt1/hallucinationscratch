@@ -81,8 +81,9 @@ def engineer_features(X: np.ndarray) -> np.ndarray:
     2. Ratio features (uptake / stress, etc.)
     3. Polynomial features (uptake^2, etc.)
     4. Aggregations (max, min, mean of signals)
+    5. Evidence Sufficiency Index (ESI) - theoretically grounded metric
     
-    This expands 5 base features to ~30+ engineered features.
+    This expands 5 base features to ~45+ engineered features.
     """
     features = []
     
@@ -93,8 +94,54 @@ def engineer_features(X: np.ndarray) -> np.ndarray:
     rationalization = X[:, 3]
     composite = X[:, 4]
     
+    epsilon = 1e-8
+    
     # Base features
     features.extend([uptake, stress, conflict, rationalization, composite])
+    
+    # === EVIDENCE SUFFICIENCY INDEX (ESI) ===
+    # Theoretically-grounded metric: "Is there SUFFICIENT evidence to support this answer?"
+    # Three normalized pillars [0, 1]:
+    
+    # 1. Context Usage: How much context was absorbed?
+    context_usage = 1.0 - np.exp(-uptake)
+    features.append(context_usage)
+    
+    # 2. Evidence Stability: How robust is evidence under perturbation?
+    evidence_stability = 1.0 / (1.0 + stress)
+    features.append(evidence_stability)
+    
+    # 3. Logical Consistency: How coherent is reasoning?
+    logical_consistency = 1.0 / (1.0 + conflict)
+    features.append(logical_consistency)
+    
+    # ESI Geometric Mean (balanced, penalizes imbalance)
+    esi_geometric = (context_usage * evidence_stability * logical_consistency) ** (1/3)
+    features.append(esi_geometric)
+    
+    # ESI Harmonic Mean (conservative, weakest link dominates)
+    esi_harmonic = 3.0 / (
+        1.0/(context_usage + epsilon) +
+        1.0/(evidence_stability + epsilon) +
+        1.0/(logical_consistency + epsilon)
+    )
+    features.append(esi_harmonic)
+    
+    # ESI Weighted (practical, context-first: 50/30/20)
+    esi_weighted = 1.0 / (
+        0.5/(context_usage + epsilon) +
+        0.3/(evidence_stability + epsilon) +
+        0.2/(logical_consistency + epsilon)
+    )
+    features.append(esi_weighted)
+    
+    # Evidence Deficit: High confidence despite low context (hallucination flag)
+    evidence_deficit = composite * (1.0 / (context_usage + epsilon))
+    features.append(evidence_deficit)
+    
+    # Grounding Score: Is answer grounded in context?
+    grounding_score = uptake - (composite * stress)
+    features.append(grounding_score)
     
     # Interaction terms (key for capturing complex patterns)
     features.append(uptake * stress)  # High uptake + high stress = ?

@@ -1,7 +1,7 @@
 \documentclass[11pt,letterpaper]{article}
 
 %----------------------------------------------------------------------------------------
-%   1. EMBEDDED BIBLIOGRAPHY (Auto-generates references.bib)
+%   1. EMBEDDED BIBLIOGRAPHY
 %----------------------------------------------------------------------------------------
 \begin{filecontents}{references.bib}
 @inproceedings{alemi2016deep,
@@ -187,6 +187,12 @@
   journal={arXiv preprint arXiv:2309.01219},
   year={2023}
 }
+@inproceedings{patronusai2024halubench,
+  title={HaluBench: A Holistic Benchmark for Hallucination Detection in RAG},
+  author={Patronus AI},
+  booktitle={Proceedings of the 1st Workshop on Reliable NLP},
+  year={2024}
+}
 \end{filecontents}
 
 %----------------------------------------------------------------------------------------
@@ -217,10 +223,11 @@
 % Use natbib with number style
 \usepackage[numbers,sort&compress]{natbib}
 
-% Meta AI / Research Colors
+% Colors
 \definecolor{metablue}{RGB}{6, 104, 225}
 \definecolor{darkgray}{RGB}{30, 30, 30}
 \definecolor{lightgray}{RGB}{245, 245, 245}
+\definecolor{riskred}{RGB}{200, 40, 40}
 
 % Hyperlink Setup
 \hypersetup{
@@ -254,11 +261,11 @@
 %----------------------------------------------------------------------------------------
 %   TITLE BLOCK
 %----------------------------------------------------------------------------------------
-\title{\sffamily\bfseries\huge \modelname: Predictive Coding and Information Bottleneck\\for Hallucination Detection in Large Language Models}
+\title{\sffamily\bfseries\huge Case Study: Predictive Coding and Information Bottleneck\\for Hallucination Detection in Large Language Models}
 
 \author{
-    \textit{Manish Bhatt}\thanks{Corresponding author: \texttt{manishbhatt@google.com}} \quad \textit{Author Two} \quad \textit{Author Three} \\[0.5em]
-    Google DeepMind
+    \textit{Manish Bhatt}\thanks{Corresponding author: \texttt{manish.bhatt13212@gmail.com}. Code available at \texttt{github.com/manishbhatt/pcib}. This work is not related to Author's position at Amazon.} \\[0.5em]
+    AI Offensive Security Researcher, OWASP
 }
 
 \date{\today}
@@ -271,9 +278,9 @@
 %   ABSTRACT
 %----------------------------------------------------------------------------------------
 \begin{abstract}
-\noindent Hallucinations in Large Language Models (LLMs)—generations that are plausible but factually unfaithful—remain a critical barrier to high-stakes deployment. Current detection methods typically rely on expensive external retrieval loops or opaque black-box sampling statistics. In this work, we introduce \textit{\modelname}, a hybrid detection framework that combines neuroscience-inspired signal design with supervised machine learning. We extract four interpretable signals grounded in \textit{Predictive Coding} (quantifying surprise against internal priors) and the \textit{Information Bottleneck} (measuring signal retention under perturbation): \textit{Uptake} (prediction error via KL divergence), \textit{Stress} (semantic instability via JS divergence), \textit{Conflict} (logical inconsistency), and \textit{Rationalization} (reasoning trace coherence). 
+\noindent Hallucinations in Large Language Models (LLMs)—generations that are plausible but factually unfaithful—remain a critical barrier to high-stakes deployment. Current detection methods typically rely on computationally expensive external retrieval loops or opaque black-box sampling statistics. In this work, we introduce \textit{\modelname}, a hybrid detection framework that combines neuroscience-inspired signal design with supervised machine learning. We extract four interpretable signals grounded in \textit{Predictive Coding} (quantifying surprise against internal priors) and the \textit{Information Bottleneck} (measuring signal retention under perturbation): \textit{Uptake} (prediction error via KL divergence), \textit{Stress} (semantic instability via JS divergence), \textit{Conflict} (logical inconsistency), and \textit{Rationalization} (reasoning trace coherence). 
 
-Evaluating on HaluBench ($n=200$, perfectly balanced), our theory-guided baseline achieves an \textit{AUROC of 0.8017}. Furthermore, by employing supervised stacking on these signals, we capture non-linear interactions that boost performance to an \textit{AUROC of 0.8543} ($+6.6\%$), establishing a new Pareto frontier for interpretable detection. Crucially, we report a negative result regarding Chain-of-Thought verification: the \textit{Rationalization} signal fails to distinguish hallucinations, suggesting that LLMs can generate highly coherent reasoning traces for false premises. This work demonstrates that domain knowledge encoded in signal architecture provides a superior inductive bias compared to pure data-driven approaches.
+Evaluating on HaluBench ($n=200$, perfectly balanced), our theory-guided baseline achieves an \textit{AUROC of 0.8017}. Furthermore, by employing supervised stacking on these signals, we capture non-linear interactions that boost performance to an \textit{AUROC of 0.8414} ($+5\%$), establishing a frontier for interpretable detection. Crucially, we report a negative result regarding Chain-of-Thought verification: the \textit{Rationalization} signal fails to distinguish hallucinations, suggesting that LLMs can generate highly coherent reasoning traces for false premises ("Sycophancy"). This work demonstrates that domain knowledge encoded in signal architecture provides a superior inductive bias compared to pure data-driven approaches.
 \end{abstract}
 
 %----------------------------------------------------------------------------------------
@@ -287,18 +294,16 @@ Current detection methods typically trade interpretability for performance. \tex
 
 We draw upon two theoretical frameworks:
 \begin{itemize}[leftmargin=*]
-    \item \textit{Predictive Coding:} A neuroscience theory positing that intelligence minimizes \textit{prediction error} (surprisal). We hypothesize that hallucinations manifest as "low-uptake" states where the model's generated answer contradicts the latent priors established by the context.
+    \item \textit{Predictive Coding:} A neuroscience theory positing that intelligence minimizes \textit{prediction error} (surprisal) . We hypothesize that hallucinations manifest as "low-uptake" states where the model's generated answer contradicts the latent priors established by the context.
     \item \textit{Information Bottleneck (IB):} The principle that robust representations compress inputs to retain only relevant information \cite{tishby2000information}. We hypothesize that hallucinations are "fragile" representations that degrade rapidly under semantic perturbation (High Stress/Conflict), whereas factual knowledge is robust.
 \end{itemize}
 
 Our contributions are:
 \begin{enumerate}
     \item \textit{Interpretable Signal Decomposition:} We formalize detection not as a binary classification but as the aggregation of four diagnostics: Uptake, Stress, Conflict, and Rationalization.
-    \item \textit{Hybrid Theory-Guided + Data-Driven Framework:} We demonstrate that neuroscience-inspired signals serve as powerful features for supervised learning. The theory-guided baseline achieves AUROC of 0.8017, while stacked models reach 0.8543 ($+6.6\%$).
-    \item \textit{Negative Result on Rationalization:} We provide empirical evidence that checking reasoning consistency (Rationalization) is ineffective, challenging the prevailing assumption that Chain-of-Thought (CoT) consistency implies faithfulness.
+    \item \textit{Hybrid Theory-Guided + Data-Driven Framework:} We demonstrate that neuroscience-inspired signals serve as powerful features for supervised learning. The theory-guided baseline achieves AUROC of 0.8017, while stacked models reach 0.8414 ($+5\%$).
+    \item \textit{Negative Result on Rationalization:} We provide empirical evidence that checking reasoning consistency (Rationalization) is ineffective, challenging the prevailing assumption.
 \end{enumerate}
-
-Furthermore, we propose that the distinction between factual generation and hallucination can be viewed through a thermodynamic lens. Factual generation represents a "low-energy" state where the model's internal parametric memory aligns with the external context, requiring minimal divergence to produce the output. Conversely, intrinsic hallucination represents a "high-energy" state where the model must actively suppress the provided context to assert a prior-based falsehood. By measuring the "work" required to force this deviation (Uptake) or the entropy generated when the representation is perturbed (Stress), we obtain a quantifiable proxy for the truth-value of the generation without requiring access to a ground-truth oracle.
 
 %----------------------------------------------------------------------------------------
 %   RELATED WORK
@@ -314,10 +319,7 @@ The dominant paradigm for zero-resource detection involves sampling multiple com
 To address the limitations of self-consistency, entailment-based methods rely on external verifiers. \textit{RARR} \cite{gao2023rarr} and \textit{Q2} \cite{honovich2021qags} utilize search engines to verify claims post-hoc. \textit{FactScore} \cite{min2023factscore} introduced the crucial step of decomposing generations into atomic claims for granular verification, a technique we adapt for our \textit{Stress} signal. \textit{Peng et al.} \cite{peng2023check} and \textit{Dhuliawala et al.} \cite{dhuliawala2023chain} integrate verification steps directly into the decoding chain (Chain-of-Verification). While effective, these methods introduce high latency \cite{chen2024benchmarking}. Our \modelname\ framework distinguishes itself by being entirely self-contained, detecting intrinsic hallucinations (conflicts between context and answer) as defined in recent RAG surveys \cite{huang2023survey, liu2023trustworthy}.
 
 \subsection{Theoretical Foundations: Predictive Coding \& IB}
-Our work grounds detection in cognitive neuroscience. \textit{Predictive Coding}, popularized by \textit{Friston} \cite{friston2010free} and adapted for NLP by \textit{Tschannen et al.} \cite{tschannen2018recent}, suggests that intelligence minimizes variational free energy (surprisal). \textit{Rao and Ballard} \cite{rao1999predictive} established the neural basis for this, which we operationalize as our \textit{Uptake} signal. Parallelly, the \textit{Information Bottleneck (IB)} principle \cite{tishby2000information, tishby2015deep} posits that optimal representations compress input to retain only relevant signal. \textit{Alemi et al.} \cite{alemi2016deep} applied VIB to deep learning, while \textit{Li and Eisner} \cite{li2019specializing} explored its use in compressing task-specific information. We extend this to hallucination by hypothesizing that "hallucinated" information is noise that is lost under the compression of semantic perturbation.
-
-\subsection{Sycophancy and Calibration}
-A critical challenge in modern LLMs is \textit{Sycophancy}—the tendency to align with user priors over truth. \textit{Zhang et al.} \cite{zhang2023siren} and \textit{Sharma et al.} \cite{sharma2023understanding} show that RLHF exacerbates this issue. This explains why naive confidence scores \cite{kadavath2022language} are often miscalibrated. \textit{Tian et al.} \cite{tian2023just} and \textit{Turpin et al.} \cite{turpin2023language} demonstrate that Chain-of-Thought reasoning is often biased by the answer the model "wants" to give, supporting our negative result regarding the \textit{Rationalization} signal. Recent work by \textit{Wei et al.} \cite{wei2023jailbroken} suggests that safety training can paradoxically increase the fragility of factual recall, necessitating robust detectors like PCIB.
+Our work grounds detection in cognitive neuroscience. \textit{Predictive Coding}, popularized by \textit{Friston} \cite{friston2010free} and adapted for NLP by \textit{Tschannen et al.} \cite{tschannen2018recent}, suggests that intelligence minimizes variational free energy (surprisal). \textit{Rao and Ballard} \cite{rao1999predictive} established the neural basis for this, which we operationalize as our \textit{Uptake} signal. Parallelly, the \textit{Information Bottleneck (IB)} principle \cite{tishby2000information, tishby2015deep}  posits that optimal representations compress input to retain only relevant signal. \textit{Alemi et al.} \cite{alemi2016deep} applied VIB to deep learning, while \textit{Li and Eisner} \cite{li2019specializing} explored its use in compressing task-specific information. We extend this to hallucination by hypothesizing that "hallucinated" information is noise that is lost under the compression of semantic perturbation.
 
 %----------------------------------------------------------------------------------------
 %   THEORETICAL FRAMEWORK
@@ -329,12 +331,15 @@ Our method is not a heuristic collection of metrics, but a unified framework der
 \subsection{Predictive Coding and Surprisal}
 Predictive Coding theory suggests that intelligent systems operate by minimizing \textit{prediction error}. In the context of LLMs, a "hallucination" occurs when the model relies excessively on its pre-trained priors rather than the provided context. We define \textit{Context Uptake} as the divergence between the model's output distribution when conditioned on the context versus when the context is withheld. A factual answer should be highly dependent on context (high divergence), whereas a hallucination driven by priors will likely persist even without context (low divergence).
 
-This dynamic can be formalized using the Free Energy Principle, where the agent (the LLM) attempts to minimize the upper bound on surprise (variational free energy) given sensory observations (the retrieved context chunks). When a model hallucinates intrinsically, it effectively ignores the "sensory data" of the context, failing to update its posterior beliefs. This failure manifests as a vanishing KL divergence between the prior (context-less) and posterior (context-aware) distributions, signaling that the retrieved information was not integrated into the generation process.
+This dynamic can be formalized using the Free Energy Principle, where the agent (the LLM) attempts to minimize the upper bound on surprise (variational free energy) given sensory observations (the retrieved context chunks). When a model hallucinates intrinsically, it effectively ignores the "sensory data" of the context, failing to update its posterior beliefs.
+
+\subsection{The Thermodynamics of Hallucination}
+We propose that the distinction between factual generation and hallucination can be viewed through a thermodynamic lens . Factual generation represents a "low-energy" state where the model's internal parametric memory aligns with the external context, requiring minimal divergence to produce the output. Conversely, intrinsic hallucination represents a "high-energy" state where the model must actively suppress the provided context to assert a prior-based falsehood. By measuring the "work" required to force this deviation (Uptake) or the entropy generated when the representation is perturbed (Stress), we obtain a quantifiable proxy for the truth-value of the generation without requiring access to a ground-truth oracle.
 
 \subsection{The Information Bottleneck Principle}
 The Information Bottleneck (IB) method formalizes the extraction of relevant information. We hypothesize that factual knowledge represents a "robust" compression—it is invariant to nuisance transformations like phrasing changes. Conversely, hallucinations represent "fragile" compressions. Therefore, if we perturb the semantic encoding of a claim (inject noise), a hallucinated concept should degrade (change truth value) faster than a factual one. We term this degradation \textit{Stress}.
 
-Implicit in this formulation is the assumption that the manifold of factual statements is smoother than that of hallucinations. Because hallucinations are often "stitched together" from disparate regions of the model's latent space to satisfy a superficial fluency constraint, they lack the dense connectivity of established facts. Consequently, small perturbations in input space (paraphrasing) push the representation off the "hallucination manifold" and into contradictory or unrelated states, resulting in high variance (Stress) in the entailment probability distribution.
+Implicit in this formulation is the assumption that the manifold of factual statements is smoother than that of hallucinations. Because hallucinations are often "stitched together" from disparate regions of the model's latent space to satisfy a superficial fluency constraint, they lack the dense connectivity of established facts.
 
 %----------------------------------------------------------------------------------------
 %   METHODOLOGY
@@ -345,33 +350,72 @@ We model detection as a binary classification task. Given a triple $(Q, C, A)$�
 
 \subsection{Signal Extraction}
 
-\textit{Signal 1: Uptake (U) -- The Prediction Error.}
+\subsubsection{Signal 1: Uptake (U) -- The Prediction Error}
 Derived from Predictive Coding, Uptake measures the "surprise" the model experiences regarding its own answer when conditioned on the context versus the question alone.
 \begin{equation}
     U = \DKL\left( P(A \mid Q, C) \;\middle\|\; P(A \mid Q) \right)
 \end{equation}
 Practically, we approximate this via log-likelihood differences of the generated tokens. High Uptake implies the context significantly informed the answer (factual).
 
-\textit{Signal 2: Stress (S) -- Semantic Stability.}
+\subsubsection{Signal 2: Stress (S) -- Semantic Stability}
 Under the Information Bottleneck principle, a robust concept (fact) should be invariant to nuisance transformations. We inject semantic noise by paraphrasing extracted claims $c_i$ into variants $\{c_i^{(k)}\}_{k=1}^K$ and compute the Jensen-Shannon (JS) divergence of the entailment probability distributions:
 \begin{equation}
     S = \frac{1}{|C|} \sum_{i=1}^{|C|} \E_k \left[ \JS\left( p_i \parallel p_i^{(k)} \right) \right]
 \end{equation}
 High Stress indicates that minor phrasing changes cause the model to waffle on whether the claim is true.
 
-\textit{Signal 3: Conflict (C) -- Logical Consistency.}
-We explicitly probe whether perturbed claims contradict the original answer. Weighted heavily in our scoring, this signal captures instances where the model "accidentally" reveals a falsehood when pressed.
+\subsubsection{Signal 3: Conflict (C) -- Logical Consistency}
+Unlike Stress, which measures probability shifts, Conflict explicitly measures the logical compatibility of the answer against its perturbed variants. We utilize a Natural Language Inference (NLI) model to compute the probability that a perturbed claim $c_i^{(k)}$ contradicts the original answer $A$:
+\begin{equation}
+    C = \frac{1}{|C|} \sum_{i=1}^{|C|} \max_k \left[ P_{\text{NLI}}(\text{contradiction} \mid A, c_i^{(k)}) \right]
+\end{equation}
+We take the maximum over $k$ because a single perturbation revealing a contradiction is sufficient to invalidate the hallucination.
 
-\textit{Signal 4: Rationalization (R) -- Trace Coherence.}
+\subsubsection{Signal 4: Rationalization (R) -- Trace Coherence}
 We generate $M$ reasoning traces $T_m$ explaining *why* a claim is true. We measure the semantic overlap (Jaccard similarity) of these traces.
 \begin{equation}
     R = \frac{2}{M(M-1)} \sum_{j<k} \text{Jaccard}(T_j, T_k)
 \end{equation}
 
-\subsection{Supervised Stacking}
-To capture non-linear interactions between signals (e.g., low Uptake is acceptable if the Question asks for "Common Knowledge"), we feed the raw vector $[U, S, C, R]$ into meta-learners. We also engineer interaction features such as ratio terms ($U / (S + \epsilon)$) and polynomials to boost the decision boundary.
+\subsection{Implementation Pipeline}
 
-Crucially, the aggregation of these signals requires careful normalization before feeding into linear models, though tree-based ensembles handle this naturally. Since KL divergence ($U$) is theoretically unbounded $[0, \infty)$ while Jaccard similarity ($R$) is bounded $[0, 1]$, raw concatenation can lead to convergence issues in logistic regression. Our stacked approach (using Random Forest and Gradient Boosting) inherently manages these differing scales via decision tree splits, effectively learning a dynamic weighting scheme that can, for instance, discount the importance of 'Uptake' when the 'Conflict' signal is saturatingly high.
+The complete extraction process is detailed in Algorithm \ref{alg:pcib}.
+
+\begin{algorithm}[H]
+\caption{\modelname\ Signal Extraction Pipeline}
+\label{alg:pcib}
+\begin{algorithmic}[1]
+\REQUIRE Question $Q$, Context $C$, Answer $A$, LLM $\mathcal{M}$, NLI Model $\mathcal{N}$
+\STATE \textbf{Step 1: Compute Uptake}
+\STATE $P_{\text{prior}} \leftarrow \mathcal{M}(A \mid Q)$
+\STATE $P_{\text{post}} \leftarrow \mathcal{M}(A \mid Q, C)$
+\STATE $U \leftarrow \text{KL}(P_{\text{post}} || P_{\text{prior}})$
+
+\STATE \textbf{Step 2: Compute Stress \& Conflict}
+\STATE $Claims \leftarrow \text{ExtractClaims}(\mathcal{M}, A)$
+\FOR{each claim $c_i$ in $Claims$}
+    \STATE $c_i^{\text{perturbed}} \leftarrow \text{Paraphrase}(\mathcal{M}, c_i, \text{temp}=0.7)$
+    \STATE $p_{orig} \leftarrow \mathcal{N}(\text{entailment} \mid C, c_i)$
+    \STATE $p_{pert} \leftarrow \mathcal{N}(\text{entailment} \mid C, c_i^{\text{perturbed}})$
+    \STATE $S_i \leftarrow \text{JS\_Divergence}(p_{orig}, p_{pert})$
+    \STATE $C_i \leftarrow \mathcal{N}(\text{contradiction} \mid A, c_i^{\text{perturbed}})$
+\ENDFOR
+\STATE $S \leftarrow \text{Mean}(\{S_i\})$, $C \leftarrow \text{Max}(\{C_i\})$
+
+\STATE \textbf{Step 3: Feature Stacking}
+\STATE $\mathbf{x} \leftarrow [U, S, C, R, \text{ESI}_{\text{geo}}]$
+\STATE $y_{\text{pred}} \leftarrow \text{Classifier}_{\text{RF}}(\mathbf{x})$
+\RETURN $y_{\text{pred}}$
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Evidence Sufficiency Index (ESI)}
+
+To improve interpretability, we synthesize raw signals into the \textit{Evidence Sufficiency Index (ESI)}, a normalized metric $[0, 1]$ representing the reliability of the generation.
+\begin{equation}
+    \text{ESI}_{\text{harm}} = \frac{3}{\frac{1}{\mathcal{U}} + \frac{1}{\mathcal{S}} + \frac{1}{\mathcal{C}}}
+\end{equation}
+We employ the Harmonic Mean (rather than Arithmetic) because evidence is a "weakest link" problem; if \textit{any} component (context usage, stability, or consistency) fails, the generation should be considered untrustworthy.
 
 %----------------------------------------------------------------------------------------
 %   EXPERIMENTAL SETUP
@@ -383,17 +427,6 @@ We evaluate our method on a subset of \textit{HaluBench} ($n=200$) \cite{patronu
 
 We report \textit{AUROC}, \textit{AUPRC} (precision-recall AUC), \textit{F1-Score}, \textit{Sensitivity}, and \textit{Specificity}. Class balance analysis confirms that our AUPRC baseline is 0.5 (equal to AUROC baseline), ensuring that reported performance metrics reflect genuine discriminative ability rather than artifactual inflation from class imbalance.
 
-To ensure robust evaluation, we specifically curated the negative samples (factual answers) to be non-trivial. Rather than using simple extractive copies where the answer appears verbatim in the context, the factual examples in our HaluBench subset often require multi-hop reasoning or synthesis of multiple context chunks. This design choice prevents the detector from relying on simple lexical overlap heuristics (e.g., ROUGE or BLEU scores) and forces the system to evaluate the underlying semantic entailment, mirroring the complexity of real-world production environments.
-
-\subsection{Configurations}
-We compare multiple configurations:
-\begin{itemize}
-    \item \textit{Baseline (3x Cost):} Computes Uptake, Stress, and Conflict.
-    \item \textit{Ensembles (3x--15x Cost):} Naive voting ensembles of size $N=1, 3, 5$.
-    \item \textit{PCIB-NoRat (5x Cost):} Baseline + Trace Validation but \textit{ignoring} Rationalization similarity.
-    \item \textit{PCIB-Full (6x Cost):} All signals including Rationalization ($R$).
-\end{itemize}
-
 %----------------------------------------------------------------------------------------
 %   RESULTS
 %----------------------------------------------------------------------------------------
@@ -401,8 +434,6 @@ We compare multiple configurations:
 
 \subsection{Quantitative Performance}
 Table \ref{tab:comparison} details the performance of \modelname\ against baselines. The theory-guided unsupervised aggregation achieves an AUROC of \textit{0.8017}. When we apply advanced feature engineering and supervised stacking (specifically a Meta-Ensemble), the model learns optimal decision boundaries, raising AUROC to \textit{0.8414}.
-
-Score distributions reveal clear separation: hallucinated content averages a risk score of 0.742 ($\sigma=0.261$) while factual content averages 0.390 ($\sigma=0.242$), yielding a separation margin of 0.35.
 
 \begin{table}[h]
 \centering
@@ -423,45 +454,6 @@ PCIB (Theory-Guided) & Unsupervised & 0.8017 & 0.7387 & 0.77 \\
 \bottomrule
 \end{tabular}
 \end{table}
-
-\subsection{Model Ablation Studies}
-
-To understand the contribution of different modeling approaches, we compare supervised learning methods on PCIB signals with advanced feature engineering (30+ features). Table \ref{tab:ablation} presents the results.
-
-\begin{table}[h]
-\centering
-\small
-\caption{Model ablation study comparing different supervised learning approaches on engineered PCIB features.}
-\label{tab:ablation}
-\begin{tabular}{lccc}
-\toprule
-\textit{Model Configuration} & \textit{AUROC} & \textit{$\Delta$ vs Baseline} & \textit{AUPRC} \\
-\midrule
-\rowcolor{lightgray} \textit{Meta-Ensemble (RF+GB+SVM)} & \textit{0.8414} & \textit{+0.0397} & \textit{0.8619} \\
-Random Forest (Calibrated) & 0.8312 & +0.0295 & 0.8525 \\
-SVM-RBF (Calibrated) & 0.8269 & +0.0252 & 0.8219 \\
-Optimized Weighted (4 models) & 0.8247 & +0.0230 & 0.8263 \\
-Gradient Boosting & 0.8224 & +0.0207 & 0.8451 \\
-Neural Network (MLP) & 0.8132 & +0.0115 & 0.8413 \\
-\midrule
-\textit{PCIB Theory-Guided (Baseline)} & 0.8017 & -- & 0.7387 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\textit{Key Findings:}
-
-\textit{1. Simple Ensemble Averaging is Optimal:} The meta-ensemble (simple averaging of RF, GB, SVM) achieves the best AUROC (0.8414), outperforming both individual models and the more complex weighted ensemble (0.8247). This suggests that on small datasets (n=200), model diversity matters more than optimal weighting, and that complex ensembles risk overfitting.
-
-\textit{2. All Supervised Methods Improve Over Baseline:} Every supervised learning approach outperforms the theory-guided baseline (+1.2\% to +4.0\% AUROC), demonstrating that learned decision boundaries on PCIB signals consistently capture non-linear interactions missed by hand-crafted aggregation rules.
-
-\textit{3. Random Forest as Strong Single Model:} Random Forest (0.8312 AUROC) performs nearly as well as the meta-ensemble, suggesting it effectively learns feature interactions through its tree structure. This makes RF an excellent choice when computational simplicity is prioritized.
-
-\textit{4. Weighted Ensemble Underperforms:} The optimized weighted ensemble (0.8247) performs worse than simple averaging (0.8414), indicating that learning optimal weights overfits on the small training set. This highlights a key challenge in hallucination detection: limited labeled data.
-
-\textit{5. Feature Engineering Enables Learning:} The consistent improvements across all supervised methods (neural networks, tree ensembles, SVMs) validate that expanding 5 base PCIB signals to 30+ engineered features (interactions, ratios, polynomials) creates a richer feature space that allows models to learn complex decision boundaries.
-
-\textit{6. Theory-Guided Baseline Remains Competitive:} Despite being unsupervised, the theory-guided approach (0.8017) falls only 3.97 percentage points behind the best supervised method, demonstrating the strong inductive bias provided by Predictive Coding and Information Bottleneck theory.
 
 \subsection{Visual Analysis}
 Figure \ref{fig:performance} displays the ROC and PR curves. The ROC curve (left) shows a pronounced convexity, indicating high sensitivity at low false-positive rates. The optimal threshold at 0.516 maximizes Youden's J statistic, achieving 75\% Sensitivity and 82\% Specificity.
@@ -529,28 +521,21 @@ Figure \ref{fig:performance} displays the ROC and PR curves. The ROC curve (left
 \section{Discussion}
 
 \subsection{The Failure of Rationalization}
-The counter-intuitive underperformance of the PCIB-Full configuration implies that checking if a model can "get its story straight" is not a reliable proxy for truth. Hallucinating models often construct robust, consistent internal worlds. When asked to generate multiple reasoning traces for a false claim, the model likely conditions on the false claim itself, generating consistently incorrect explanations.
+Our finding that the Rationalization signal does not improve detection performance implies that checking if a model can "get its story straight" is not a reliable proxy for truth. Hallucinating models often construct robust, consistent internal states. When asked to generate multiple reasoning traces for a false claim, the model likely conditions on the false claim itself, generating consistently incorrect explanations.
 
 Our results regarding the inefficacy of the Rationalization signal challenge the growing trend of using Chain-of-Thought (CoT) for self-verification. We posit that this is due to the "sycophancy" effect, where the model's reasoning trace is generated to support the already-chosen token path rather than to critique it. Consequently, the model essentially "doubles down" on its hallucination, generating a coherent but factually untethered explanation that fools consistency-based metrics.
 
 \subsection{Theory-Guided vs. Data-Driven Aggregation}
-Our comparison against 14 aggregation methods reveals that theory-guided design dominates pure empiricism on small datasets. PCIB's unsupervised mode (Rank #2) outperforms all supervised models except the Stacked Ensemble. The failure of simple averaging (AUROC 0.48) vs. PCIB (0.80) demonstrates that the \textit{interaction} between Uptake and Stress is non-trivial; high uptake (factual) must suppress the risk score even if stress is moderate, a dynamic encoded in our theoretical formulation but missed by naive averaging.
-
-\subsection{Operational Recommendations}
-For practitioners deploying hallucination detection systems, \modelname\ offers flexible deployment modes. The \textit{Theory-Guided Mode (AUROC 0.80)} is best suited for high-stakes domains requiring full explainability, offering complete signal decomposition and regulatory compliance. The \textit{Stacked Mode (AUROC 0.85+)} is ideal for production systems prioritizing performance, offering state-of-the-art results while maintaining feature-level interpretability.
-
-Regarding latency, the computational overhead of PCIB is dominated by the perturbation step (generating paraphrases) and the multiple forward passes required for Uptake calculation. However, this cost is highly parallelizable. Unlike iterative sampling methods (e.g., SelfCheckGPT) which require sequential token generation for long sequences to estimate entropy, the Stress signal computes entailment on atomic claims which can be batched concurrently. This architectural advantage reduces the effective wall-clock latency, making PCIB viable for near-real-time verification in asynchronous workflows where batch processing is available.
+Our comparison of seven aggregation methods reveals that theory-guided design dominates pure empiricism on small datasets. PCIB's unsupervised mode (0.8017 AUROC) outperforms all supervised models except the Meta-Ensemble. The failure of simple averaging (AUROC 0.48) vs. PCIB (0.80) demonstrates that the \textit{interaction} between Uptake and Stress is non-linear; high uptake (factual) must suppress the risk score even if stress is moderate, a dynamic encoded in our theoretical formulation but missed by naive averaging.
 
 %----------------------------------------------------------------------------------------
 %   CONCLUSION
 %----------------------------------------------------------------------------------------
 \section{Conclusion}
 
-We presented \modelname, a hybrid framework that combines neuroscience-inspired signal design with supervised machine learning for hallucination detection. Our results establish a new performance benchmark: the theory-guided baseline achieves AUROC of 0.8017, while supervised stacking on PCIB signals reaches AUROC of 0.8543 ($+6.6\%$ improvement), achieving the competitive threshold for practical deployment.
+We presented \modelname, a hybrid framework that combines neuroscience-inspired signal design with supervised machine learning for hallucination detection. Our results establish a performance benchmark: the theory-guided baseline achieves AUROC of 0.8017, while supervised stacking on PCIB signals reaches AUROC of 0.8414 ($+5\%$ improvement), achieving the competitive threshold for practical deployment.
 
-This work validates that cognitive neuroscience principles (Predictive Coding + Information Bottleneck) provide superior inductive bias compared to statistical learning alone. By demonstrating that hallucinations exhibit higher entropy under perturbation and lower affinity for source context, we provide both a theoretical foundation and practical implementation for robust hallucination detection.
-
-Finally, this work suggests a potential pathway for "self-correcting" alignment training. If PCIB signals can reliably detect hallucinations without human labels, they could serve as a reward model for Reinforcement Learning from AI Feedback (RLAIF). By penalizing generations with low Uptake or high Stress during the fine-tuning phase, we may be able to instill an intrinsic "faithfulness" objective directly into the model weights, moving the industry beyond post-hoc detection toward inherently robust generation.
+This work shows that cognitive neuroscience principles (Predictive Coding + Information Bottleneck) provide superior inductive bias compared to statistical learning alone. By demonstrating that hallucinations exhibit higher entropy under perturbation and lower affinity for source context, we provide both a theoretical foundation and practical implementation for hallucination detection.
 
 %----------------------------------------------------------------------------------------
 %   BIBLIOGRAPHY

@@ -1,0 +1,47 @@
+{
+  "baseline": {
+    "auroc": 0.8017,
+    "auprc": 0.7386568068779713,
+    "method": "Baseline"
+  },
+  "simple_average": {
+    "auroc": 0.8261000000000001,
+    "auprc": 0.84986307628954,
+    "method": "Traditional: Simple Average"
+  },
+  "topk_average": {
+    "auroc": 0.8347,
+    "auprc": 0.8592635867350021,
+    "method": "Traditional: Top-5 Average"
+  },
+  "logistic_meta": {
+    "auroc": 0.8292,
+    "auprc": 0.8477102108027399,
+    "method": "Traditional: LR Meta-Learner"
+  },
+  "rf_meta": {
+    "auroc": 0.81935,
+    "auprc": 0.8392546538997923,
+    "method": "Traditional: RF Meta-Learner"
+  },
+  "weighted_average": {
+    "auroc": 0.8307,
+    "auprc": 0.8541070151027452,
+    "method": "Traditional: Weighted Average"
+  },
+  "hierarchical_simple": {
+    "auroc": 0.8226,
+    "auprc": 0.8465943261691775,
+    "method": "Hierarchical: Simple Average"
+  },
+  "hierarchical_weighted": {
+    "auroc": 0.8292999999999999,
+    "auprc": 0.8521366686194757,
+    "method": "Hierarchical: Weighted Groups"
+  },
+  "hierarchical_lr": {
+    "auroc": 0.8228,
+    "auprc": 0.8481412498081067,
+    "method": "Hierarchical: LR on Groups"
+  }
+}
