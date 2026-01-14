@@ -12,12 +12,12 @@ This approach combines:
 
 import json
 import numpy as np
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, ExtraTreesClassifier
 from sklearn.svm import SVC
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import cross_val_score, StratifiedKFold, GridSearchCV
-from sklearn.metrics import roc_auc_score, average_precision_score, classification_report
+from sklearn.metrics import roc_auc_score, average_precision_score, classification_report, accuracy_score, roc_curve
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.neural_network import MLPClassifier
 from sklearn.linear_model import LogisticRegression
@@ -33,6 +33,31 @@ try:
 except ImportError:
     HAS_LGB = False
     print("Warning: LightGBM not installed. Install with: pip install lightgbm")
+
+
+def optimal_threshold_accuracy(y_true: np.ndarray, y_scores: np.ndarray) -> Tuple[float, float]:
+    """
+    Calculate accuracy at optimal threshold using Youden's J statistic.
+    
+    Youden's J = Sensitivity + Specificity - 1 = TPR - FPR
+    
+    This finds the threshold that maximizes the vertical distance from the
+    ROC curve to the diagonal (random classifier line).
+    
+    Returns:
+        accuracy: Accuracy at optimal threshold
+        optimal_threshold: The threshold that maximizes Youden's J
+    """
+    fpr, tpr, thresholds = roc_curve(y_true, y_scores)
+    youden_j = tpr - fpr
+    optimal_idx = np.argmax(youden_j)
+    optimal_threshold = thresholds[optimal_idx]
+    
+    # Calculate accuracy at this threshold
+    y_pred = (y_scores >= optimal_threshold).astype(int)
+    accuracy = accuracy_score(y_true, y_pred)
+    
+    return accuracy, optimal_threshold
 
 
 def load_results(filepath: str) -> Tuple[np.ndarray, np.ndarray, List[Dict]]:
@@ -208,15 +233,19 @@ def train_stacked_models(X: np.ndarray, y: np.ndarray) -> Dict:
     baseline_scores = X[:, 4]
     baseline_auroc = roc_auc_score(y, baseline_scores)
     baseline_auprc = average_precision_score(y, baseline_scores)
+    baseline_accuracy, baseline_threshold = optimal_threshold_accuracy(y, baseline_scores)
     
     print(f"BASELINE (Original PCIB Composite Score):")
     print(f"  AUROC: {baseline_auroc:.4f}")
     print(f"  AUPRC: {baseline_auprc:.4f}")
+    print(f"  Accuracy: {baseline_accuracy:.4f} ({baseline_accuracy*100:.2f}%) @ threshold={baseline_threshold:.3f}")
     print()
     
     results['baseline'] = {
         'auroc': baseline_auroc,
         'auprc': baseline_auprc,
+        'accuracy': baseline_accuracy,
+        'threshold': baseline_threshold,
         'method': 'PCIB Theory-Guided'
     }
     
@@ -245,11 +274,13 @@ def train_stacked_models(X: np.ndarray, y: np.ndarray) -> Dict:
     
     rf_auroc = roc_auc_score(y, rf_pred)
     rf_auprc = average_precision_score(y, rf_pred)
+    rf_accuracy, rf_threshold = optimal_threshold_accuracy(y, rf_pred)
     
     print(f"Best params: {rf_grid.best_params_}")
     print(f"CV AUROC: {rf_scores_cv.mean():.4f} ± {rf_scores_cv.std():.4f}")
     print(f"Final AUROC: {rf_auroc:.4f} (Δ={rf_auroc - baseline_auroc:+.4f})")
     print(f"Final AUPRC: {rf_auprc:.4f} (Δ={rf_auprc - baseline_auprc:+.4f})")
+    print(f"Final Accuracy: {rf_accuracy:.4f} ({rf_accuracy*100:.2f}%) @ threshold={rf_threshold:.3f}")
     print(f"\n✓ Improvement vs baseline: {((rf_auroc/baseline_auroc - 1) * 100):+.2f}%")
     
     # Feature importance
@@ -262,13 +293,58 @@ def train_stacked_models(X: np.ndarray, y: np.ndarray) -> Dict:
     results['random_forest'] = {
         'auroc': rf_auroc,
         'auprc': rf_auprc,
+        'accuracy': rf_accuracy,
+        'threshold': rf_threshold,
         'method': 'RF Stacking (Calibrated)',
         'improvement': rf_auroc - baseline_auroc
     }
     
-    # Model 2: Gradient Boosting
+    # Model 2: Extra Trees (faster than RF, more randomization)
     print("\n" + "-" * 80)
-    print("MODEL 2: Gradient Boosting Stacking")
+    print("MODEL 2: Extra Trees Stacking")
+    print("-" * 80)
+    
+    et_params = {
+        'n_estimators': [100, 200, 300],
+        'max_depth': [5, 10, 15, None],
+        'min_samples_split': [2, 5, 10],
+        'min_samples_leaf': [1, 2, 4]
+    }
+    
+    et = ExtraTreesClassifier(random_state=42, class_weight='balanced')
+    et_grid = GridSearchCV(et, et_params, cv=cv, scoring='roc_auc', n_jobs=-1, verbose=0)
+    et_grid.fit(X, y)
+    
+    # Get predictions with calibration
+    et_calibrated = CalibratedClassifierCV(et_grid.best_estimator_, method='isotonic', cv=cv)
+    et_calibrated.fit(X, y)
+    
+    et_scores_cv = cross_val_score(et_calibrated, X, y, cv=cv, scoring='roc_auc')
+    et_pred = cross_val_predict_proba(et_calibrated, X, y, cv)
+    
+    et_auroc = roc_auc_score(y, et_pred)
+    et_auprc = average_precision_score(y, et_pred)
+    et_accuracy, et_threshold = optimal_threshold_accuracy(y, et_pred)
+    
+    print(f"Best params: {et_grid.best_params_}")
+    print(f"CV AUROC: {et_scores_cv.mean():.4f} ± {et_scores_cv.std():.4f}")
+    print(f"Final AUROC: {et_auroc:.4f} (Δ={et_auroc - baseline_auroc:+.4f})")
+    print(f"Final AUPRC: {et_auprc:.4f} (Δ={et_auprc - baseline_auprc:+.4f})")
+    print(f"Final Accuracy: {et_accuracy:.4f} ({et_accuracy*100:.2f}%) @ threshold={et_threshold:.3f}")
+    print(f"\n✓ Improvement vs baseline: {((et_auroc/baseline_auroc - 1) * 100):+.2f}%")
+    
+    results['extra_trees'] = {
+        'auroc': et_auroc,
+        'auprc': et_auprc,
+        'accuracy': et_accuracy,
+        'threshold': et_threshold,
+        'method': 'Extra Trees Stacking (Calibrated)',
+        'improvement': et_auroc - baseline_auroc
+    }
+    
+    # Model 3: Gradient Boosting
+    print("\n" + "-" * 80)
+    print("MODEL 3: Gradient Boosting Stacking")
     print("-" * 80)
     
     gb_params = {
@@ -287,23 +363,27 @@ def train_stacked_models(X: np.ndarray, y: np.ndarray) -> Dict:
     
     gb_auroc = roc_auc_score(y, gb_pred)
     gb_auprc = average_precision_score(y, gb_pred)
+    gb_accuracy, gb_threshold = optimal_threshold_accuracy(y, gb_pred)
     
     print(f"Best params: {gb_grid.best_params_}")
     print(f"CV AUROC: {gb_scores_cv.mean():.4f} ± {gb_scores_cv.std():.4f}")
     print(f"Final AUROC: {gb_auroc:.4f} (Δ={gb_auroc - baseline_auroc:+.4f})")
     print(f"Final AUPRC: {gb_auprc:.4f} (Δ={gb_auprc - baseline_auprc:+.4f})")
+    print(f"Final Accuracy: {gb_accuracy:.4f} ({gb_accuracy*100:.2f}%) @ threshold={gb_threshold:.3f}")
     print(f"\n✓ Improvement vs baseline: {((gb_auroc/baseline_auroc - 1) * 100):+.2f}%")
     
     results['gradient_boosting'] = {
         'auroc': gb_auroc,
         'auprc': gb_auprc,
+        'accuracy': gb_accuracy,
+        'threshold': gb_threshold,
         'method': 'GB Stacking',
         'improvement': gb_auroc - baseline_auroc
     }
     
-    # Model 3: SVM with RBF Kernel
+    # Model 4: SVM with RBF Kernel
     print("\n" + "-" * 80)
-    print("MODEL 3: SVM with RBF Kernel (Non-linear)")
+    print("MODEL 4: SVM with RBF Kernel (Non-linear)")
     print("-" * 80)
     
     # SVM needs feature scaling for best performance
@@ -330,44 +410,52 @@ def train_stacked_models(X: np.ndarray, y: np.ndarray) -> Dict:
     
     svm_auroc = roc_auc_score(y, svm_pred)
     svm_auprc = average_precision_score(y, svm_pred)
+    svm_accuracy, svm_threshold = optimal_threshold_accuracy(y, svm_pred)
     
     print(f"Best params: {svm_grid.best_params_}")
     print(f"CV AUROC: {svm_scores_cv.mean():.4f} ± {svm_scores_cv.std():.4f}")
     print(f"Final AUROC: {svm_auroc:.4f} (Δ={svm_auroc - baseline_auroc:+.4f})")
     print(f"Final AUPRC: {svm_auprc:.4f} (Δ={svm_auprc - baseline_auprc:+.4f})")
+    print(f"Final Accuracy: {svm_accuracy:.4f} ({svm_accuracy*100:.2f}%) @ threshold={svm_threshold:.3f}")
     print(f"\n✓ Improvement vs baseline: {((svm_auroc/baseline_auroc - 1) * 100):+.2f}%")
     
     results['svm_rbf'] = {
         'auroc': svm_auroc,
         'auprc': svm_auprc,
+        'accuracy': svm_accuracy,
+        'threshold': svm_threshold,
         'method': 'SVM-RBF Stacking (Calibrated)',
         'improvement': svm_auroc - baseline_auroc
     }
     
-    # Model 4: Ensemble of all stacked models
+    # Model 5: Ensemble of all stacked models
     print("\n" + "-" * 80)
-    print("MODEL 4: Meta-Ensemble (Average RF + GB + SVM)")
+    print("MODEL 5: Meta-Ensemble (Average RF + ET + GB + SVM)")
     print("-" * 80)
     
-    ensemble_pred = (rf_pred + gb_pred + svm_pred) / 3
+    ensemble_pred = (rf_pred + et_pred + gb_pred + svm_pred) / 4
     ensemble_auroc = roc_auc_score(y, ensemble_pred)
     ensemble_auprc = average_precision_score(y, ensemble_pred)
+    ensemble_accuracy, ensemble_threshold = optimal_threshold_accuracy(y, ensemble_pred)
     
     print(f"Final AUROC: {ensemble_auroc:.4f} (Δ={ensemble_auroc - baseline_auroc:+.4f})")
     print(f"Final AUPRC: {ensemble_auprc:.4f} (Δ={ensemble_auprc - baseline_auprc:+.4f})")
+    print(f"Final Accuracy: {ensemble_accuracy:.4f} ({ensemble_accuracy*100:.2f}%) @ threshold={ensemble_threshold:.3f}")
     print(f"\n✓ Improvement vs baseline: {((ensemble_auroc/baseline_auroc - 1) * 100):+.2f}%")
     
     results['meta_ensemble'] = {
         'auroc': ensemble_auroc,
         'auprc': ensemble_auprc,
-        'method': 'Meta-Ensemble (RF+GB+SVM)',
+        'accuracy': ensemble_accuracy,
+        'threshold': ensemble_threshold,
+        'method': 'Meta-Ensemble (RF+ET+GB+SVM)',
         'improvement': ensemble_auroc - baseline_auroc
     }
     
-    # Model 5: LightGBM (if available)
+    # Model 6: LightGBM (if available)
     if HAS_LGB:
         print("\n" + "-" * 80)
-        print("MODEL 5: LightGBM Stacking")
+        print("MODEL 6: LightGBM Stacking")
         print("-" * 80)
         
         lgb_params = {
@@ -386,23 +474,27 @@ def train_stacked_models(X: np.ndarray, y: np.ndarray) -> Dict:
         
         lgb_auroc = roc_auc_score(y, lgb_pred)
         lgb_auprc = average_precision_score(y, lgb_pred)
+        lgb_accuracy, lgb_threshold = optimal_threshold_accuracy(y, lgb_pred)
         
         print(f"Best params: {lgb_grid.best_params_}")
         print(f"CV AUROC: {lgb_scores_cv.mean():.4f} ± {lgb_scores_cv.std():.4f}")
         print(f"Final AUROC: {lgb_auroc:.4f} (Δ={lgb_auroc - baseline_auroc:+.4f})")
         print(f"Final AUPRC: {lgb_auprc:.4f} (Δ={lgb_auprc - baseline_auprc:+.4f})")
+        print(f"Final Accuracy: {lgb_accuracy:.4f} ({lgb_accuracy*100:.2f}%) @ threshold={lgb_threshold:.3f}")
         print(f"\n✓ Improvement vs baseline: {((lgb_auroc/baseline_auroc - 1) * 100):+.2f}%")
         
         results['lightgbm'] = {
             'auroc': lgb_auroc,
             'auprc': lgb_auprc,
+            'accuracy': lgb_accuracy,
+            'threshold': lgb_threshold,
             'method': 'LightGBM Stacking',
             'improvement': lgb_auroc - baseline_auroc
         }
     else:
         lgb_pred = None
     
-    # Model 6: Neural Network
+    # Model 7: Neural Network
     print("\n" + "-" * 80)
     print("MODEL 7: Multi-Layer Perceptron (Neural Network)")
     print("-" * 80)
@@ -426,28 +518,32 @@ def train_stacked_models(X: np.ndarray, y: np.ndarray) -> Dict:
     
     nn_auroc = roc_auc_score(y, nn_pred)
     nn_auprc = average_precision_score(y, nn_pred)
+    nn_accuracy, nn_threshold = optimal_threshold_accuracy(y, nn_pred)
     
     print(f"Best params: {nn_grid.best_params_}")
     print(f"CV AUROC: {nn_scores_cv.mean():.4f} ± {nn_scores_cv.std():.4f}")
     print(f"Final AUROC: {nn_auroc:.4f} (Δ={nn_auroc - baseline_auroc:+.4f})")
     print(f"Final AUPRC: {nn_auprc:.4f} (Δ={nn_auprc - baseline_auprc:+.4f})")
+    print(f"Final Accuracy: {nn_accuracy:.4f} ({nn_accuracy*100:.2f}%) @ threshold={nn_threshold:.3f}")
     print(f"\n✓ Improvement vs baseline: {((nn_auroc/baseline_auroc - 1) * 100):+.2f}%")
     
     results['neural_network'] = {
         'auroc': nn_auroc,
         'auprc': nn_auprc,
+        'accuracy': nn_accuracy,
+        'threshold': nn_threshold,
         'method': 'Neural Network (MLP)',
         'improvement': nn_auroc - baseline_auroc
     }
     
-    # Model 7: Optimized Weighted Ensemble (learn optimal weights)
+    # Model 8: Optimized Weighted Ensemble (learn optimal weights)
     print("\n" + "-" * 80)
-    print("MODEL 7: Optimized Weighted Ensemble (Learned Weights)")
+    print("MODEL 8: Optimized Weighted Ensemble (Learned Weights)")
     print("-" * 80)
     
     # Collect all predictions
-    all_preds = [rf_pred, gb_pred, svm_pred, nn_pred]
-    model_names = ['RF', 'GB', 'SVM', 'NN']
+    all_preds = [rf_pred, et_pred, gb_pred, svm_pred, nn_pred]
+    model_names = ['RF', 'ET', 'GB', 'SVM', 'NN']
     
     if lgb_pred is not None:
         all_preds.append(lgb_pred)
@@ -463,6 +559,7 @@ def train_stacked_models(X: np.ndarray, y: np.ndarray) -> Dict:
     
     optimal_auroc = roc_auc_score(y, weight_pred)
     optimal_auprc = average_precision_score(y, weight_pred)
+    optimal_accuracy, optimal_threshold = optimal_threshold_accuracy(y, weight_pred)
     
     # Fit to get weights
     weight_learner.fit(stacked_preds, y)
@@ -476,11 +573,14 @@ def train_stacked_models(X: np.ndarray, y: np.ndarray) -> Dict:
     print(f"\nCV AUROC: {weight_scores_cv.mean():.4f} ± {weight_scores_cv.std():.4f}")
     print(f"Final AUROC: {optimal_auroc:.4f} (Δ={optimal_auroc - baseline_auroc:+.4f})")
     print(f"Final AUPRC: {optimal_auprc:.4f} (Δ={optimal_auprc - baseline_auprc:+.4f})")
+    print(f"Final Accuracy: {optimal_accuracy:.4f} ({optimal_accuracy*100:.2f}%) @ threshold={optimal_threshold:.3f}")
     print(f"\n✓ Improvement vs baseline: {((optimal_auroc/baseline_auroc - 1) * 100):+.2f}%")
     
     results['optimized_ensemble'] = {
         'auroc': optimal_auroc,
         'auprc': optimal_auprc,
+        'accuracy': optimal_accuracy,
+        'threshold': optimal_threshold,
         'method': 'Optimized Weighted Ensemble',
         'improvement': optimal_auroc - baseline_auroc,
         'weights': {name: float(w) for name, w in zip(model_names, learned_weights)}

@@ -1,0 +1,87 @@
+{
+  "baseline_base": {
+    "auroc": 0.8017,
+    "auprc": 0.7386568068779713,
+    "accuracy": 0.785,
+    "threshold": 0.5160090723309602,
+    "method": "PCIB Baseline (Base)",
+    "variant": "base"
+  },
+  "rf_base": {
+    "auroc": 0.8274,
+    "auprc": 0.8447861309056675,
+    "accuracy": 0.78,
+    "threshold": 0.42029397818871506,
+    "method": "Random Forest (Base)",
+    "variant": "base"
+  },
+  "gb_base": {
+    "auroc": 0.7630499999999999,
+    "auprc": 0.791260085994884,
+    "accuracy": 0.715,
+    "threshold": 0.008805465606063293,
+    "method": "Gradient Boosting (Base)",
+    "variant": "base"
+  },
+  "nn_base": {
+    "auroc": 0.8102,
+    "auprc": 0.8470918802197037,
+    "accuracy": 0.785,
+    "threshold": 0.5478320645998764,
+    "method": "Neural Network (Base)",
+    "variant": "base"
+  },
+  "ensemble_base": {
+    "auroc": 0.8211,
+    "auprc": 0.842393733040175,
+    "accuracy": 0.77,
+    "threshold": 0.4499540419669664,
+    "method": "Optimized Ensemble (Base)",
+    "variant": "base"
+  },
+  "baseline_improved": {
+    "auroc": 0.8017,
+    "auprc": 0.7386568068779713,
+    "accuracy": 0.785,
+    "threshold": 0.5160090723309602,
+    "method": "PCIB Baseline (Improved)",
+    "variant": "improved"
+  },
+  "random_forest": {
+    "auroc": 0.8669,
+    "auprc": 0.8594714736055575,
+    "accuracy": 0.815,
+    "threshold": 0.4337863803451444,
+    "method": "RF (Improved Features)",
+    "variant": "improved"
+  },
+  "gradient_boosting": {
+    "auroc": 0.8535000000000001,
+    "auprc": 0.864030172234332,
+    "accuracy": 0.8,
+    "threshold": 0.6621490536806598,
+    "method": "GB (Improved Features)",
+    "variant": "improved"
+  },
+  "neural_network": {
+    "auroc": 0.8403,
+    "auprc": 0.8623641557362891,
+    "accuracy": 0.81,
+    "threshold": 0.48539539304575974,
+    "method": "Neural Network (Improved)",
+    "variant": "improved"
+  },
+  "optimized_ensemble": {
+    "auroc": 0.8629999999999999,
+    "auprc": 0.8698513051010728,
+    "accuracy": 0.81,
+    "threshold": 0.37504958060918203,
+    "method": "Optimized Ensemble (Improved)",
+    "variant": "improved",
+    "weights": {
+      "RF": 0.4167960541489677,
+      "GB": 0.26270954940044644,
+      "NN": 0.32049439645058597
+    }
+  }
+}

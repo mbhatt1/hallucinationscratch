@@ -1,0 +1,131 @@
+/**
+ * Custom styles for PCIB Detector documentation
+ */
+
+:root {
+  /* Brand colors */
+  --vp-c-brand: #0066cc;
+  --vp-c-brand-light: #3388dd;
+  --vp-c-brand-lighter: #5599ee;
+  --vp-c-brand-dark: #004499;
+  --vp-c-brand-darker: #003377;
+  
+  /* Custom colors for signals */
+  --signal-good: #22c55e;
+  --signal-bad: #ef4444;
+  --signal-warn: #f59e0b;
+}
+
+/* Hero section customization */
+.VPHero .name {
+  background: linear-gradient(120deg, var(--vp-c-brand) 30%, #5599ee);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Feature grid */
+.VPFeature {
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.VPFeature:hover {
+  border-color: var(--vp-c-brand);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 102, 204, 0.1);
+}
+
+/* Code blocks */
+.vp-code-group {
+  margin: 1.5rem 0;
+}
+
+/* Tables */
+.vp-doc table {
+  display: block;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.vp-doc th {
+  background: var(--vp-c-bg-soft);
+  font-weight: 600;
+}
+
+/* Custom callout boxes */
+.custom-block.tip {
+  border-color: var(--signal-good);
+}
+
+.custom-block.warning {
+  border-color: var(--signal-warn);
+}
+
+.custom-block.danger {
+  border-color: var(--signal-bad);
+}
+
+/* Signal value badges */
+.signal-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0 0.25rem;
+}
+
+.signal-good {
+  background: var(--signal-good);
+  color: white;
+}
+
+.signal-bad {
+  background: var(--signal-bad);
+  color: white;
+}
+
+.signal-warn {
+  background: var(--signal-warn);
+  color: white;
+}
+
+/* Performance comparison tables */
+.perf-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+}
+
+.perf-table th {
+  text-align: left;
+  padding: 0.75rem;
+  border-bottom: 2px solid var(--vp-c-divider);
+}
+
+.perf-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--vp-c-divider-light);
+}
+
+.perf-table tr:hover {
+  background: var(--vp-c-bg-soft);
+}
+
+/* Math equations */
+.vp-doc .katex {
+  font-size: 1.1em;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .VPFeature {
+    margin-bottom: 1rem;
+  }
+  
+  .vp-doc table {
+    font-size: 0.875rem;
+  }
+}

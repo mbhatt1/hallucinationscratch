@@ -1,0 +1,23 @@
+{
+  "name": "pcib-detector-docs",
+  "version": "1.0.0",
+  "description": "Documentation for PCIB Hallucination Detector",
+  "scripts": {
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
+  },
+  "devDependencies": {
+    "vitepress": "^1.0.0",
+    "vue": "^3.4.0"
+  },
+  "keywords": [
+    "hallucination-detection",
+    "llm",
+    "predictive-coding",
+    "information-bottleneck",
+    "documentation"
+  ],
+  "author": "Manish Bhatt",
+  "license": "MIT"
+}

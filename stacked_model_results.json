@@ -2,48 +2,71 @@
   "baseline": {
     "auroc": 0.8017,
     "auprc": 0.7386568068779713,
+    "accuracy": 0.785,
+    "threshold": 0.5160090723309602,
     "method": "PCIB Theory-Guided"
   },
   "random_forest": {
     "auroc": 0.8399000000000001,
     "auprc": 0.8400856873020323,
+    "accuracy": 0.79,
+    "threshold": 0.33765114298587634,
     "method": "RF Stacking (Calibrated)",
     "improvement": 0.03820000000000012
+  },
+  "extra_trees": {
+    "auroc": 0.8294,
+    "auprc": 0.846256150591622,
+    "accuracy": 0.76,
+    "threshold": 0.5016806679454807,
+    "method": "Extra Trees Stacking (Calibrated)",
+    "improvement": 0.027700000000000058
   },
   "gradient_boosting": {
     "auroc": 0.82475,
     "auprc": 0.8487446819181595,
+    "accuracy": 0.785,
+    "threshold": 0.5753558932530527,
     "method": "GB Stacking",
     "improvement": 0.023050000000000015
   },
   "svm_rbf": {
     "auroc": 0.8302499999999999,
     "auprc": 0.8099167353770301,
+    "accuracy": 0.795,
+    "threshold": 0.48440945557763576,
     "method": "SVM-RBF Stacking (Calibrated)",
     "improvement": 0.028549999999999964
   },
   "meta_ensemble": {
-    "auroc": 0.8465,
-    "auprc": 0.8642348442694425,
-    "method": "Meta-Ensemble (RF+GB+SVM)",
-    "improvement": 0.04480000000000006
+    "auroc": 0.8458000000000001,
+    "auprc": 0.8646176278973363,
+    "accuracy": 0.795,
+    "threshold": 0.40398270921116214,
+    "method": "Meta-Ensemble (RF+ET+GB+SVM)",
+    "improvement": 0.04410000000000014
   },
   "neural_network": {
     "auroc": 0.8029000000000001,
     "auprc": 0.840545699660683,
+    "accuracy": 0.765,
+    "threshold": 0.47784887581976293,
     "method": "Neural Network (MLP)",
     "improvement": 0.0012000000000000899
   },
   "optimized_ensemble": {
-    "auroc": 0.8295,
-    "auprc": 0.8452559569663083,
+    "auroc": 0.8293,
+    "auprc": 0.8454857028100744,
+    "accuracy": 0.795,
+    "threshold": 0.4010268460235869,
     "method": "Optimized Weighted Ensemble",
-    "improvement": 0.027800000000000047,
+    "improvement": 0.02760000000000007,
     "weights": {
-      "RF": 0.26940565489198887,
-      "GB": 0.24224040900221228,
-      "SVM": 0.31750786907166767,
-      "NN": 0.17084606703413113
+      "RF": 0.23531155695198813,
+      "ET": 0.11298972142136117,
+      "GB": 0.22098379872193494,
+      "SVM": 0.28587221967618676,
+      "NN": 0.144842703228529
     }
   }
 }
